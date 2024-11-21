@@ -133,7 +133,7 @@ void Player::printStats(){
     cout<<"Stamina: "<<_stamina<<endl;
     cout<<"Wisdom "<<_wisdom<<endl;
     cout<<"Pride Points: "<<_pride_points<<endl;
-
+    /*
     //animation printing
     //clears the screen
     cout<<"\033[2J"<<endl;
@@ -156,6 +156,7 @@ void Player::printStats(){
         usleep(100000);
         cout<<"\033[2J"<<endl;
     }
+    */
 }
 //animation frames
 void Player::printFrame(int index){
