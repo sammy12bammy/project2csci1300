@@ -53,4 +53,36 @@ int main(){
         cout << stat << " ";
     }
     cout << endl;
+
+    //player 1 choice for board type
+    char p1choice;
+    cout<<"Player 1 would you like to go to the prideland or cub training?"<<endl;
+    while(true){
+        cout<<"Enter [y] for prideland or [c] for cub training"<<endl;
+        cin>>p1choice;
+        if(p1choice == 'y'){
+            break;
+        } else if(p1choice == 'c'){
+            break;
+        } else {
+            cout<<"Invalid choice option"<<endl;
+        }
+    }
+    //player 2 choice for board type
+    char p2choice;
+    cout<<"Player 2 would you like to go to the prideland or cub training?"<<endl;
+    while(true){
+        cout<<"Enter [y] for prideland or [c] for cub training"<<endl;
+        cin>>p2choice;
+        if(p2choice == 'y'){
+            break;
+        } else if(p2choice == 'c'){
+            break;
+        } else {
+            cout<<"Invalid choice option"<<endl;
+        }
+    }
+    //initalize board
+    Board board(2);
+    board.initializeBoard(p1choice, p2choice);
 }
