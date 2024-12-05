@@ -1,48 +1,70 @@
+
 #include<iostream>
 #include "Player.h"
 #include "Board.h"
 #include <fstream>
 #include <sstream>
 #include <vector>
+//for spinner function
+#include <thread> 
+#include <chrono>
+//random num
+#include <cstdlib>
 
 using namespace std;
 
-void() displayCharacters(){
+/*
+THis generates a random number between 1 and 6 with a slight delay
+*/
+int spinner(){
+    cout<<"Picking random number between 1-6"<<endl;
+    cout<<"..."<<endl;
+    //sleeps for 3 seconds
+    this_thread::sleep_for(chrono::seconds(3));
+    int ran = rand() % 6;
+    cout<<"The random number is "<<ran<<endl;
+    return ran;
+
+}
+//menu for display character options
+void displayCharacters(){
    cout<<"Press 1-5 to select your character"<<endl;
    cout<<"1 - Apollo|5|500|500|1000|20000"<<endl;
-   cout<<2 - Mane|8|900|600|600|20000"<<endl;
-   cout<<3 - Elsa|12|900|700|500|20000"<<endl;
-   cout<<4 - Zuri|7|600|500|900|20000<<endl;
-   cout<<5 - Roary|18|1000|500|500|20000<<endl;
+   cout<<"2 - Mane|8|900|600|600|20000"<<endl;
+   cout<<"3 - Elsa|12|900|700|500|20000"<<endl;
+   cout<<"4 - Zuri|7|600|500|900|20000"<<endl;
+   cout<<"5 - Roary|18|1000|500|500|20000"<<endl;
 }
 
 int main(){
-
-   
-
+    //check if txt file opened properlly
     fstream inFile("character.txt");
     if (!inFile) {
-        cerr << "Error opening file!" << endl;
+        cout << "Error opening file!" << endl;
         return 1;
     }
 
+
+    //player 1
     string header;
     getline(inFile, header);
 
     int userInput;
+    cout<<"Welcome Player 1, please select your character"<<endl;
     displayCharacters();
+    cout << "Enter the line number (1-5): ";
     cin >> userInput;
-
+    //fix this later
     if (userInput < 1 || userInput > 5) {
-        cerr << "Invalid line number!" << endl;
+        cout << "Invalid line number!" << endl;
         return 1;
     }
 
     string line;
     int currentLine = 0;
-    vector<int> stats;
+    vector<string> stats;
 
-    while (getline(inFile, line)) {
+    while(getline(inFile, line)) {
         currentLine++;
         if (currentLine == userInput) {
             stringstream ss(line);
@@ -50,24 +72,59 @@ int main(){
 
             getline(ss, value, '|');
             while (getline(ss, value, '|')) {
-                stats.push_back(stoi(value));
+                stats.push_back(value);
             }
             break;
         }
     }
 
     inFile.close();
+    //make a player class for p1
+    cout << endl;
+    Player p1(stats[0],stoi(stats[2]),stoi(stats[3]),stoi(stats[4]));
+    p1.setPridePoints(stoi(stats[5]));
+    p1.setAge(stoi(stats[1]));
 
-    if (stats.empty()) {
-        cout << "No stats found for the selected line!" << endl;
+    //player 2
+    getline(inFile, header);
+
+    int userInput;
+    cout<<"Welcome Player 2, please select your character"<<endl;
+    displayCharacters();
+    cout << "Enter the line number (1-5): ";
+    cin >> userInput;
+    //fix this later
+    if (userInput < 1 || userInput > 5) {
+        cout << "Invalid line number!" << endl;
         return 1;
     }
 
-    cout << "Stats for the selected line:" << endl;
-    for (int i = 0; i < 6; i++) {
-        cout << stats[i] << " ";
+    string line;
+    int currentLine = 0;
+    vector<string> stats;
+
+    while(getline(inFile, line)) {
+        currentLine++;
+        if (currentLine == userInput) {
+            stringstream ss(line);
+            string value;
+
+            getline(ss, value, '|');
+            while (getline(ss, value, '|')) {
+                stats.push_back(value);
+            }
+            break;
+        }
     }
+
+    inFile.close();
+    //make a player class for p1
     cout << endl;
+    Player p1(stats[0],stoi(stats[2]),stoi(stats[3]),stoi(stats[4]));
+    p1.setPridePoints(stoi(stats[5]));
+    p1.setAge(stoi(stats[1]));
+
+
      //player 1 choice for board type
     char p1choice;
     cout<<"Player 1 would you like to go to the prideland or cub training?"<<endl;
@@ -99,11 +156,6 @@ int main(){
     //initalize board
     Board board(2);
     board.initializeBoard(p1choice, p2choice);
-
-
-
-   
-
 
     return 0;
 }
