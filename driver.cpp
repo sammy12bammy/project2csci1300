@@ -7,6 +7,15 @@
 
 using namespace std;
 
+void() displayCharacters(){
+   cout<<"Press 1-5 to select your character"<<endl;
+   cout<<"1 - Apollo|5|500|500|1000|20000"<<endl;
+   cout<<2 - Mane|8|900|600|600|20000"<<endl;
+   cout<<3 - Elsa|12|900|700|500|20000"<<endl;
+   cout<<4 - Zuri|7|600|500|900|20000<<endl;
+   cout<<5 - Roary|18|1000|500|500|20000<<endl;
+}
+
 int main(){
 
    
@@ -21,7 +30,7 @@ int main(){
     getline(inFile, header);
 
     int userInput;
-    cout << "Enter the line number (1-5): ";
+    displayCharacters();
     cin >> userInput;
 
     if (userInput < 1 || userInput > 5) {
