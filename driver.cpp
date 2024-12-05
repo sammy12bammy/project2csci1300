@@ -1,10 +1,16 @@
 #include<iostream>
 #include "Player.h"
 #include "Board.h"
+#include <fstream>
+#include <sstream>
+#include <vector>
 
 using namespace std;
 
 int main(){
+
+   
+
     fstream inFile("character.txt");
     if (!inFile) {
         cerr << "Error opening file!" << endl;
@@ -49,12 +55,11 @@ int main(){
     }
 
     cout << "Stats for the selected line:" << endl;
-    for (int stat : stats) {
-        cout << stat << " ";
+    for (int i = 0; i < 6; i++) {
+        cout << stats[i] << " ";
     }
     cout << endl;
-
-    //player 1 choice for board type
+     //player 1 choice for board type
     char p1choice;
     cout<<"Player 1 would you like to go to the prideland or cub training?"<<endl;
     while(true){
@@ -85,4 +90,11 @@ int main(){
     //initalize board
     Board board(2);
     board.initializeBoard(p1choice, p2choice);
+
+
+
+   
+
+
+    return 0;
 }
