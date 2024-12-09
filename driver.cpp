@@ -23,7 +23,7 @@ int spinner(){
         this_thread::sleep_for(chrono::milliseconds(500));
     }
     cout<<endl;
-    int ran = rand() % 6;
+    int ran = rand() % 6 + 1;
     cout<<"The random number is "<<ran<<endl;
     return ran;
 
@@ -49,6 +49,11 @@ void displayMenu(){
 }
 
 //returns the number of spots that the move will move
+/*
+!!!!!!!!!!!
+This code breaks if the input is a string or a char
+
+*/
 int mainMenu(Player player){
     displayMenu();
     int choice;
@@ -81,6 +86,26 @@ int mainMenu(Player player){
             break;
     }
     return 0;
+}
+//makes changes to player if they choose cubTraining
+//prompts user to choice adivor
+void cubTraining(Player p){
+    p.trainCub(500,500,1000);
+    cout<<p.getName()<<", you have gotten more stamina, strength, and wisdom, but your pride points have decreased"<<endl;
+    cout<<"Please select a advisor"<<endl;
+    //do this later
+}
+
+//if the user chooses to get to pridelands
+void prideLand(Player p){
+    p.toPrideLands();
+    cout<<p.getName()<<", you have increased your pridepoints and stamina, strength, and wisdom"<<endl;
+    cout<<"You do not get a advisor but can choose one if you land on the advisor tile"<<endl;
+}
+
+//for when the game if finished, array sort here
+void displayEndGame(){
+
 }
 
 int main(){
@@ -169,8 +194,10 @@ int main(){
         cout<<"Enter [y] for prideland or [c] for cub training"<<endl;
         cin>>p1choice;
         if(p1choice == 'y'){
+            prideLand(p1);
             break;
         } else if(p1choice == 'c'){
+            cubTraining(p1);
             break;
         } else {
             cout<<"Invalid choice option"<<endl;
@@ -183,8 +210,10 @@ int main(){
         cout<<"Enter [y] for prideland or [c] for cub training"<<endl;
         cin>>p2choice;
         if(p2choice == 'y'){
+            prideLand(p2);
             break;
         } else if(p2choice == 'c'){
+            cubTraining(p2);
             break;
         } else {
             cout<<"Invalid choice option"<<endl;
@@ -193,13 +222,52 @@ int main(){
     //initalize board
     Board board(2);
     board.initializeBoard(p1choice, p2choice);
+    /*
+    stat check
+
     cout<<"Player 1"<<endl;
     p1.printStats();
     cout<<endl;
     cout<<"Player 2"<<endl;
     p2.printStats();
+    */
+    board.displayBoard();
 
-    mainMenu(p1);
+
+    bool game = true;
+    //keeps track of whos going
+    bool p1Going = true;
+
+    //check if one player is done
+
+    /*
+    The game work we just need to figure out how to impliment the spinner
+    Also we need to make sure that the second player can still continue
+    playing if the first player reached the end
+    */
+
+    while(game){
+        //if both players have reached the end
+        if(board.getPlayerPosition(1) == 52 && board.getPlayerPosition(2) == 52){
+            game = false;
+            displayEndGame();
+        }
+        if(p1Going){
+            //flips characters   
+            p1Going = !p1Going;
+            //let user know who is goig
+            cout<<"Player 1 is going"<<endl;
+            //prompt menu and move user
+            int move = mainMenu(p1);
+            board.movePlayer(0);
+        } else {
+            p1Going = !p1Going;
+            cout<<"Player 2 is going"<<endl;
+            int move = mainMenu(p2);
+            board.movePlayer(1);
+        }
+        board.displayBoard();
+    }
 
     return 0;
 }
