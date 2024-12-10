@@ -22,6 +22,7 @@ class Board  {
     public:
         Board();
         Board(int player_count);
+        char getTileColor(int player_index, int pos);
         void displayTrack(int player_index);
         void initializeBoard(char p1, char p2);
         void displayBoard();
