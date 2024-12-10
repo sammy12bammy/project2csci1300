@@ -62,7 +62,7 @@ void displayAdvisors(){
 This code breaks if the input is a string or a char
 
 */
-int mainMenu(Player player){
+int mainMenu(Player player, Board board){
     displayMenu();
     int choice;
     cout<<"Enter choice: "<<endl;
@@ -74,18 +74,54 @@ int mainMenu(Player player){
     }
     switch(choice){
         case 1:
+            int userInput;
             cout<<"Pride points: "<<player.getPridePoints()<<endl;
             cout<<"Your spot in the leaderpoint"<<endl;
             break;
+            cout<<"Would you like to send a message to your opponent? Press 1 for yes or 2 for no"<<endl;
+            if(userInput == 1){
+                string message;
+                cin >> message;
+                cout<<"Message from player:"<<player.getName()<<message<<endl;
+            }
+
         case 2:
             cout<<player.getName()<<" name: "<<player.getName()<<endl;
             cout<<player.getName()<<" age: "<<player.getAge()<<endl;
             break;
         case 3:
-            //??
+            board.displayBoard();
             break;
         case 4:
-            //?? 
+            int userInput;
+            if(player.getAdvisor() == 0){
+                cout<<"You do not currently have an advisor"<<endl;
+            }else if(player.getAdvisor() == 1){
+                cout<<"Your current advisor is Rafiki "<<endl;
+            }else if(player.getAdvisor() == 1){
+                cout<<"Your current advisor is Nala"<<endl;
+            }else if(player.getAdvisor() == 1){
+                cout<<"Your current advisor is Sarabi"<<endl;
+            }else if(player.getAdvisor() == 1){
+                cout<<"Your current advisor is Zazu"<<endl;
+            }else if(player.getAdvisor() == 1){
+                cout<<"Your current advisor is Sarafina"<<endl;
+            }
+            cout<<"Press 1 to change advisor, or press 2 to keep your current advisor"<<endl;
+            cin >> userInput;
+
+            if(userInput == 2){
+                cout<<"Please select an advisor"<<endl;
+
+                cout<<"Enter a number 1-5"<<endl;
+                displayAdvisors();
+
+                cin >> userInput;
+
+                player.setAdvisor(userInput);
+
+            }
+
             break;
         case 5:
             int num = spinner();
@@ -111,6 +147,7 @@ void cubTraining(Player p){
     p.setAdvisor(userInput);
     
 }
+
 
 //if the user chooses to get to pridelands
 void prideLand(Player p){
