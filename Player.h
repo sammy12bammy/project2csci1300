@@ -7,7 +7,7 @@ using namespace std;
 class Player{
     private:
         string _name;
-        int _strength, _stamina, _wisdom, _pride_points, _age, _advisor;
+        int _strength, _stamina, _wisdom, _pride_points, _age, _advisor, _playerPos;
     public:
         //constructers
         Player();
@@ -26,6 +26,9 @@ class Player{
         int getAge();
         void setAge(int);
         int getAdvisor();
+        //player pos
+        int getPlayerPos();
+        void addPlayerMoves(int);
         void setAdvisor(int);
         //adder methods
         void addStrength(int);
