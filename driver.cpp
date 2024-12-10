@@ -48,6 +48,14 @@ void displayMenu(){
     cout<<"5. Move Forward"<<endl;
 }
 
+void displayAdvisors(){
+    cout<<"1. Rafiki - Invisibility (the ability to become un-seen)"<<endl;
+    cout<<"2. Nala - Night Vision (the ability to see clearly in darkness)"<<endl;
+    cout<<"3. Sarabi - Energy Manipulation (the ability to shape and control the properties of energy)"<<endl;
+    cout<<" 4. Zazu - Weather Control (the ability to influence and manipulate weather patterns)"<<endl;
+    cout<<"5. Sarafina - Super Speed (the ability to run 4x faster than the maximum speed of lions)"<<endl;  
+}
+
 //returns the number of spots that the move will move
 /*
 !!!!!!!!!!!
@@ -90,10 +98,18 @@ int mainMenu(Player player){
 //makes changes to player if they choose cubTraining
 //prompts user to choice adivor
 void cubTraining(Player p){
+    int userInput;
     p.trainCub(500,500,1000);
     cout<<p.getName()<<", you have gotten more stamina, strength, and wisdom, but your pride points have decreased"<<endl;
-    cout<<"Please select a advisor"<<endl;
-    //do this later
+    cout<<"Please select an advisor"<<endl;
+
+    cout<<"Enter a number 1-5"<<endl;
+    displayAdvisors();
+
+    cin >> userInput;
+
+    p.setAdvisor(userInput);
+    
 }
 
 //if the user chooses to get to pridelands
