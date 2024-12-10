@@ -327,7 +327,60 @@ int main(){
             char curTile = board.getTileColor(0, p1.getPlayerPos());
             switch(curTile){
                 case 'G':
+                    int ran = rand() % 6 + 1;
+                    if(ran == 1){
+                        int ran2 = rand() % 6 + 1;
+                        if(ran2 == 1){
+                            cout<<"A desert storm sweeps through the territory"<<endl;
 
+                            if(p1.getAdvisor() == 4){
+                                cout<<"Your advisor helps you safely bypass the storm"<<endl;
+                            }else{
+                                cout<<"You lose 500 pride points"<<endl;
+                                p1.addPridePoints(-500);
+                            }
+                        }
+                        if(ran2 == 2 and p1choice == 'c'){
+                            cout<<"You are fatigued from intense training with pride warriors"<<endl;
+                            
+                            if(p1.getAdvisor() == 3){
+                                cout<<"Your advisor nurses you back to health"<<endl;
+                            }else{
+                                cout<<"You lose 200 pride points"<<endl;
+                                p1.addPridePoints(-200);
+                            }
+                            
+                        }
+                        if(ran2 == 3 and p1choice = 'y'){
+                            cout<<"You endure challenging night watch duty under pitch-black conditions"<<endl;
+
+                            if(p1.getAdvisor() == 2){
+                                cout<<"Your advisor guides you until the morning"<<endl;
+                            }else{
+                                cout<<"You lose 4000 pride points"<<endl;
+                                p1.addPridePoints(-400);
+                            }
+                        }
+                        if(ran2 == 4 and p1choice = 'y'){
+
+                            cout<<"You gain extra energy from bountiful season"<<endl;
+                            cout<<"You gain 800 pride points"<<endl;
+
+                            p1.addPridePoints(800);
+                        }
+                        if(ran2 == 5 and p1choice = 'c'){
+                            cout<<"You observe a rare natural phenomenon"<<endl;
+                            cout<<"You gain 600 pride points"<<endl;
+
+                            p1.addPridePoints(600);
+
+                        }
+                        if(ran2 == 6 and p1choice = 'y'){
+
+                            cout<<"You gained wisdom from observing Rafiki’s rituals"<<endl;
+                            cout<<"You gain 500 pride points"<<endl;
+                        }
+                    }
                     break;
                 case 'B':
                     cout<<"You landed on a oasis tile. Your stats have been updated"<<endl;
