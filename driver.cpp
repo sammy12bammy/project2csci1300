@@ -275,7 +275,44 @@ int main(){
             cout<<"Player 1 is going"<<endl;
             //prompt menu and move user
             int move = mainMenu(p1);
+            p1.addPlayerMoves(move);
+            //change this make it is move to however much they spun
             board.movePlayer(0);
+
+            //check tile
+            //if tile is green - 20% of random event
+            //if tile is blue extra turn, 200 stamina, strength, and wisdom
+            //if pink Stamina, Strength, and Wisdom Points increase by 300, choose adivosor (or switch)
+            //if red tile - move back 10 tiles and lose 100 Stamina, Strength, and Wisdom Points.
+            //if brown color returns the player to their previous position, Stamina Points decrease by 300 Points.
+            //if purple , choice random riddle - if right then 500 wisom
+
+            char curTile = board.getTileColor(0, p1.getPlayerPos());
+            switch(curTile){
+                case 'G':
+
+                    break;
+                case 'B':
+
+                    break;
+                case 'P':
+
+                    break;
+                case 'R':
+
+                    break;
+                case 'N':
+
+                    break;
+                case 'U':
+
+                    break;
+                case 'O':
+                    //end game
+                    break;
+                default:
+            }
+
         } else {
             p1Going = !p1Going;
             cout<<"Player 2 is going"<<endl;
