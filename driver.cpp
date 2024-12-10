@@ -330,13 +330,24 @@ int main(){
 
                     break;
                 case 'B':
-
+                    cout<<"You landed on a oasis tile. Your stats have been updated"<<endl;
+                    p1.addStamina(200);
+                    p1.addStrength(200);
+                    p1.addWisdom(200);
                     break;
                 case 'P':
 
                     break;
                 case 'R':
-
+                    //change player pos in player class -10
+                    //update board
+                    //loss stats
+                    cout<<": Uh-oh, you’ve stumbled into the Graveyard!"<<endl;
+                    board.movePlayer(0,-10);
+                    p1.addPlayerMoves(-10);
+                    p1.addStamina(-100);
+                    p1.addStrength(-100);
+                    p1.addWisdom(-100);
                     break;
                 case 'N':
 
