@@ -13,16 +13,32 @@
 using namespace std;
 
 /*
-THis generates a random number between 1 and 6 with a slight delay
+This generates a random number between 1 and 6 with a slight delay
 */
+
+void printSpinner(char spinnerChar, int delay) {
+    cout << "\r" << spinnerChar << flush;
+    this_thread::sleep_for(chrono::milliseconds(delay));
+}
+
 int spinner(){
-    cout<<"Picking random number between 1-6"<<endl;
-    //sleeps for 3 seconds
-    for(int i = 0; i < 6; ++i){
-        cout<<".";
-        this_thread::sleep_for(chrono::milliseconds(500));
+    // Spinner characters
+    const char spinner[] = {'|', '/', '-', '\\'};
+    const int spinnerSize = 4 / 1;
+
+    // Animation duration in milli
+    const int spinDuration = 3000; 
+    const int frameDelay = 100;
+
+    // Start the animation
+    cout << "Spinning to pick a random number (1-6)..."<<endl;
+    chrono::steady_clock::time_point startTime = chrono::steady_clock::now();
+
+    while (chrono::duration_cast<chrono::milliseconds>(chrono::steady_clock::now() - startTime).count() < spinDuration) {
+        for (int i = 0; i < spinnerSize; ++i) {
+            printSpinner(spinner[i], frameDelay);
+        }
     }
-    cout<<endl;
     int ran = rand() % 6 + 1;
     cout<<"The random number is "<<ran<<endl;
     return ran;
@@ -73,8 +89,8 @@ int mainMenu(Player player, Board board){
         cin>>choice;
     }
     switch(choice){
+        int userInput;
         case 1:
-            int userInput;
             cout<<"Pride points: "<<player.getPridePoints()<<endl;
             cout<<"Your spot in the leaderpoint"<<endl;
             break;
@@ -93,7 +109,6 @@ int mainMenu(Player player, Board board){
             board.displayBoard();
             break;
         case 4:
-            int userInput;
             if(player.getAdvisor() == 0){
                 cout<<"You do not currently have an advisor"<<endl;
             }else if(player.getAdvisor() == 1){
@@ -311,7 +326,7 @@ int main(){
             //let user know who is goig
             cout<<"Player 1 is going"<<endl;
             //prompt menu and move user
-            int move = mainMenu(p1);
+            int move = mainMenu(p1, board);
             p1.addPlayerMoves(move);
             //change this make it is move to however much they spun
             board.movePlayer(0);
@@ -327,9 +342,15 @@ int main(){
             char curTile = board.getTileColor(0, p1.getPlayerPos());
             switch(curTile){
                 case 'G':
-                    int ran = rand() % 6 + 1;
+                    //this would have been cleaner with pass by reference
+                    //there is a 20% that a random event happens when you land on a green square
+                    int ran = rand() % 5 + 1;
+                    //this loop will run 20% of the time
                     if(ran == 1){
+                        cout<<"You have stumbled upon a random event"<<endl;
+                        //decides what random event will happen (6 possible events)
                         int ran2 = rand() % 6 + 1;
+
                         if(ran2 == 1){
                             cout<<"A desert storm sweeps through the territory"<<endl;
 
@@ -339,8 +360,7 @@ int main(){
                                 cout<<"You lose 500 pride points"<<endl;
                                 p1.addPridePoints(-500);
                             }
-                        }
-                        if(ran2 == 2 and p1choice == 'c'){
+                        } else if(ran2 == 2 and p1choice == 'c'){
                             cout<<"You are fatigued from intense training with pride warriors"<<endl;
                             
                             if(p1.getAdvisor() == 3){
@@ -350,8 +370,7 @@ int main(){
                                 p1.addPridePoints(-200);
                             }
                             
-                        }
-                        if(ran2 == 3 and p1choice = 'y'){
+                        } else if(ran2 == 3 and p1choice == 'y'){
                             cout<<"You endure challenging night watch duty under pitch-black conditions"<<endl;
 
                             if(p1.getAdvisor() == 2){
@@ -360,26 +379,25 @@ int main(){
                                 cout<<"You lose 4000 pride points"<<endl;
                                 p1.addPridePoints(-400);
                             }
-                        }
-                        if(ran2 == 4 and p1choice = 'y'){
+                        } else if(ran2 == 4 and p1choice == 'y'){
 
                             cout<<"You gain extra energy from bountiful season"<<endl;
                             cout<<"You gain 800 pride points"<<endl;
 
                             p1.addPridePoints(800);
-                        }
-                        if(ran2 == 5 and p1choice = 'c'){
+                        } else if(ran2 == 5 and p1choice == 'c'){
                             cout<<"You observe a rare natural phenomenon"<<endl;
                             cout<<"You gain 600 pride points"<<endl;
 
                             p1.addPridePoints(600);
 
-                        }
-                        if(ran2 == 6 and p1choice = 'y'){
+                        } else if(ran2 == 6 and p1choice == 'y'){
 
                             cout<<"You gained wisdom from observing Rafiki’s rituals"<<endl;
                             cout<<"You gain 500 pride points"<<endl;
                         }
+                    } else{
+                        cout<<"You have stumbled on a green tile but nothing happened"<<endl;
                     }
                     break;
                 case 'B':
@@ -413,11 +431,10 @@ int main(){
                     break;
                 default:
             }
-
         } else {
             p1Going = !p1Going;
             cout<<"Player 2 is going"<<endl;
-            int move = mainMenu(p2);
+            int move = mainMenu(p2,board);
             board.movePlayer(1);
         }
         board.displayBoard();
