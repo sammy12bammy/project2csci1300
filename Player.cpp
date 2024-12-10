@@ -12,12 +12,14 @@ Player::Player(){
     _wisdom = 100;
     _pride_points = 0;
     _advisor = 0;
+    _playerPos = 0;
 }
 
 Player::Player(string name, int strength, int stamina, int wisdom){
     _pride_points = 0;
     _age = 1;
     _name = name;
+    _playerPos = 0;
     //strength
     if(strength > 1000 || strength < 100){
         _strength = 1000;
@@ -38,6 +40,14 @@ Player::Player(string name, int strength, int stamina, int wisdom){
     }
     _advisor = 0;
 }
+int Player::getPlayerPos(){
+    return _playerPos;
+}
+
+void Player::addPlayerMoves(int p){
+    _playerPos += p;
+}
+
 int Player::getAdvisor(){
     return _advisor;
 }
