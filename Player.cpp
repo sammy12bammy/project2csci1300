@@ -11,6 +11,7 @@ Player::Player(){
     _strength = 100;
     _wisdom = 100;
     _pride_points = 0;
+    _advisor = 0;
 }
 
 Player::Player(string name, int strength, int stamina, int wisdom){
@@ -35,8 +36,14 @@ Player::Player(string name, int strength, int stamina, int wisdom){
     } else {
         _wisdom = wisdom;
     }
+    _advisor = 0;
 }
-
+int Player::getAdvisor(){
+    return _advisor;
+}
+void Player::setAdvisor(int n){
+    _advisor = n;
+}
 string Player::getName(){
     return _name;
 }
