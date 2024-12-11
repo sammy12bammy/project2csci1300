@@ -176,6 +176,74 @@ void displayEndGame(){
 
 }
 
+//returns a random string of riddle with the answer
+string ranRiddle(){
+    //array of all the riddles, wanted to do this once so we dont have to open the file mulitple times
+    ifstream file("riddles.txt");
+    if(!file.is_open()){
+        cout<<"Riddles file could not open"<<endl;
+        return "";
+    }
+
+    vector<string> riddle_lines;
+    string line;
+    while (getline(file, line)) {
+        riddle_lines.push_back(line);
+    }
+
+    file.close();
+    int ranI = rand() % riddle_lines.size();
+    return riddle_lines[ranI];
+}
+
+//just the split function
+int split(string input, char delimiter, string arr[], int arrSize) {
+    // define a temporary string and helper variables
+    string temp = "";
+    int size = 0;
+
+    // check for empty input
+    if (input == "") {
+        return size;
+    }
+    else {
+        for (unsigned int i = 0; i < input.length(); i++) {
+            // Check for delimiter
+            if (input[i] != delimiter) {
+                // If the current character is not a delimiter, add it to the temporary string
+                temp = temp + input[i];
+            }
+            // if the current character is a delimiter
+            else {
+                size++;
+                // check if size > arrSize
+                if (size > arrSize) {
+                    size = -1;
+                    return size;
+                }
+                // add temporary string to the array
+                // set temp to an empty string
+                // check if last string is the longest
+                else {
+                    arr[size - 1] = temp;
+                    temp = "";
+                }
+            }
+        }
+        // Account for final string
+        size++;
+        // check if size > arrSize
+        if (size > arrSize) {
+            return -1;
+        }
+        // add temporary string to the array
+        else {
+            arr[size - 1] = temp;
+        }
+    }
+    return size;
+}
+
 int main(){
     //check if txt file opened properlly
     fstream inFile("character.txt");
@@ -329,7 +397,7 @@ int main(){
             int move = mainMenu(p1, board);
             p1.addPlayerMoves(move);
             //change this make it is move to however much they spun
-            board.movePlayer(0);
+            board.movePlayer(0, move);
 
             //check tile
             //if tile is green - 20% of random event
@@ -341,7 +409,7 @@ int main(){
 
             char curTile = board.getTileColor(0, p1.getPlayerPos());
             switch(curTile){
-                case 'G':
+                case 'G':{
                     //this would have been cleaner with pass by reference
                     //there is a 20% that a random event happens when you land on a green square
                     int ran = rand() % 5 + 1;
@@ -360,7 +428,7 @@ int main(){
                                 cout<<"You lose 500 pride points"<<endl;
                                 p1.addPridePoints(-500);
                             }
-                        } else if(ran2 == 2 and p1choice == 'c'){
+                        } else if(ran2 == 2 && p1choice == 'c'){
                             cout<<"You are fatigued from intense training with pride warriors"<<endl;
                             
                             if(p1.getAdvisor() == 3){
@@ -370,7 +438,7 @@ int main(){
                                 p1.addPridePoints(-200);
                             }
                             
-                        } else if(ran2 == 3 and p1choice == 'y'){
+                        } else if(ran2 == 3 && p1choice == 'y'){
                             cout<<"You endure challenging night watch duty under pitch-black conditions"<<endl;
 
                             if(p1.getAdvisor() == 2){
@@ -379,19 +447,19 @@ int main(){
                                 cout<<"You lose 4000 pride points"<<endl;
                                 p1.addPridePoints(-400);
                             }
-                        } else if(ran2 == 4 and p1choice == 'y'){
+                        } else if(ran2 == 4 && p1choice == 'y'){
 
                             cout<<"You gain extra energy from bountiful season"<<endl;
                             cout<<"You gain 800 pride points"<<endl;
 
                             p1.addPridePoints(800);
-                        } else if(ran2 == 5 and p1choice == 'c'){
+                        } else if(ran2 == 5 && p1choice == 'c'){
                             cout<<"You observe a rare natural phenomenon"<<endl;
                             cout<<"You gain 600 pride points"<<endl;
 
                             p1.addPridePoints(600);
 
-                        } else if(ran2 == 6 and p1choice == 'y'){
+                        } else if(ran2 == 6 && p1choice == 'y'){
 
                             cout<<"You gained wisdom from observing Rafiki’s rituals"<<endl;
                             cout<<"You gain 500 pride points"<<endl;
@@ -400,16 +468,60 @@ int main(){
                         cout<<"You have stumbled on a green tile but nothing happened"<<endl;
                     }
                     break;
-                case 'B':
+                }
+                case 'B':{
                     cout<<"You landed on a oasis tile. Your stats have been updated"<<endl;
                     p1.addStamina(200);
                     p1.addStrength(200);
                     p1.addWisdom(200);
                     break;
+                }
                 case 'P':
-
+                    cout<<"You have stumbled upon a advising tile"<<endl;
+                    cout<<"Your Stamina, Strength, and Wisdom Points increase by 300"<<endl;
+                    p1.addStamina(300);
+                    p1.addStrength(300);
+                    p1.addWisdom(300);
+                    if(p1.getAdvisor() == 0){
+                        cout<<"It looks like you do not have a advisor"<<endl;
+                        cout<<"Please select a advisor from the list or enter 0 if you dont want a advisor"<<endl;
+                        cout<<"-------------------------"<<endl;
+                        displayAdvisors();
+                        cout<<"-------------------------"<<endl;
+                        int aChoice;
+                        cin>>aChoice;
+                        while(aChoice < 0 || aChoice > 5){
+                            cout<<"Invalid Choice please enter a valid number"<<endl;
+                            cin>>aChoice;
+                        }
+                        p1.setAdvisor(aChoice);
+                    } else {
+                        cout<<"It looks like you already have a advisor"<<endl;
+                        cout<<"Would you like a new advisor? y or n"<<endl;
+                        char yornChoice;
+                        cin>>yornChoice;
+                        while(yornChoice != 'y' || yornChoice != 'n'){
+                            cout<<"Invalid choice please type y or n"<<endl;
+                            cin>>yornChoice;
+                        }
+                        if(yornChoice == 'y'){
+                            cout<<"Please select a new advisor"<<endl;
+                            cout<<"-------------------------"<<endl;
+                            displayAdvisors();
+                            cout<<"-------------------------"<<endl;
+                            int aChoice;
+                            cin>>aChoice;
+                            while(aChoice < 0 || aChoice > 5){
+                                cout<<"Invalid Choice please enter a valid number"<<endl;
+                                cin>>aChoice;
+                            }
+                            p1.setAdvisor(aChoice);
+                        } else {
+                            cout<<"Ok no worries continue on"<<endl;
+                        }
+                    }
                     break;
-                case 'R':
+                case 'R':{             
                     //change player pos in player class -10
                     //update board
                     //loss stats
@@ -420,22 +532,228 @@ int main(){
                     p1.addStrength(-100);
                     p1.addWisdom(-100);
                     break;
-                case 'N':
-
+                }
+                case 'N':{
+                    cout<<"The Hyenas are on the prowl! They push you back and decrease your stamina points!"<<endl;
+                    //this just adds a delay to make it more dramic
+                    //500 milliseconds for every move back
+                    const int spinDuration = move * 500;
+                    chrono::steady_clock::time_point startTime = chrono::steady_clock::now();
+                    while (chrono::duration_cast<chrono::milliseconds>(chrono::steady_clock::now() - startTime).count() < spinDuration) {
+                        for(int i = 0; i < move; ++i){
+                            board.movePlayer(0, -1);
+                            this_thread::sleep_for(chrono::milliseconds(500));
+                        }
+                    }                    
+                    //this line below also works but not as cool
+                    //board.movePlayer(0, move * -1);
+                    p1.addPlayerMoves(move * -1);
+                    p1.addStamina(-300);
+                    cout<<"Unlucky!!"<<endl;
                     break;
-                case 'U':
-
+                }
+                case 'U':{
+                    cout<<"You have stumbled upon a challenge tile. Answer the riddle and you will gain wisdom"<<endl;
+                    string riddle = ranRiddle();
+                    string arr[2];
+                    split(riddle, '|', arr, 2);
+                    cout<<arr[0]<<endl;
+                    string answer;
+                    cin>>answer;
+                    if(answer == arr[1]){
+                        cout<<"Correct! You have gained wisdom"<<endl;
+                        p1.addWisdom(500);
+                    } else{
+                        cout<<"You did not guess correctly"<<endl;
+                    }
                     break;
+                }
                 case 'O':
                     //end game
+                    cout<<"You reached the last tile!!!"<<endl;
                     break;
                 default:
+                    cout<<"This should never ever run"<<endl;
             }
         } else {
+            //flips characters   
             p1Going = !p1Going;
+            //let user know who is goig
             cout<<"Player 2 is going"<<endl;
-            int move = mainMenu(p2,board);
-            board.movePlayer(1);
+            //prompt menu and move user
+            int move = mainMenu(p2, board);
+            p2.addPlayerMoves(move);
+            //change this make it is move to however much they spun
+            board.movePlayer(1, move);
+
+            char curTile = board.getTileColor(1, p2.getPlayerPos());
+            switch(curTile){
+                case 'G':{
+                    //this would have been cleaner with pass by reference
+                    //there is a 20% that a random event happens when you land on a green square
+                    int ran = rand() % 5 + 1;
+                    //this loop will run 20% of the time
+                    if(ran == 1){
+                        cout<<"You have stumbled upon a random event"<<endl;
+                        //decides what random event will happen (6 possible events)
+                        int ran2 = rand() % 6 + 1;
+
+                        if(ran2 == 1){
+                            cout<<"A desert storm sweeps through the territory"<<endl;
+
+                            if(p2.getAdvisor() == 4){
+                                cout<<"Your advisor helps you safely bypass the storm"<<endl;
+                            }else{
+                                cout<<"You lose 500 pride points"<<endl;
+                                p2.addPridePoints(-500);
+                            }
+                        } else if(ran2 == 2 && p2choice == 'c'){
+                            cout<<"You are fatigued from intense training with pride warriors"<<endl;
+                            
+                            if(p2.getAdvisor() == 3){
+                                cout<<"Your advisor nurses you back to health"<<endl;
+                            }else{
+                                cout<<"You lose 200 pride points"<<endl;
+                                p2.addPridePoints(-200);
+                            }
+                            
+                        } else if(ran2 == 3 && p2choice == 'y'){
+                            cout<<"You endure challenging night watch duty under pitch-black conditions"<<endl;
+
+                            if(p2.getAdvisor() == 2){
+                                cout<<"Your advisor guides you until the morning"<<endl;
+                            }else{
+                                cout<<"You lose 4000 pride points"<<endl;
+                                p2.addPridePoints(-400);
+                            }
+                        } else if(ran2 == 4 && p2choice == 'y'){
+
+                            cout<<"You gain extra energy from bountiful season"<<endl;
+                            cout<<"You gain 800 pride points"<<endl;
+
+                            p2.addPridePoints(800);
+                        } else if(ran2 == 5 && p2choice == 'c'){
+                            cout<<"You observe a rare natural phenomenon"<<endl;
+                            cout<<"You gain 600 pride points"<<endl;
+
+                            p2.addPridePoints(600);
+
+                        } else if(ran2 == 6 && p2choice == 'y'){
+
+                            cout<<"You gained wisdom from observing Rafiki’s rituals"<<endl;
+                            cout<<"You gain 500 pride points"<<endl;
+                        }
+                    } else{
+                        cout<<"You have stumbled on a green tile but nothing happened"<<endl;
+                    }
+                    break;
+                }
+                case 'B':{
+                    cout<<"You landed on a oasis tile. Your stats have been updated"<<endl;
+                    p2.addStamina(200);
+                    p2.addStrength(200);
+                    p2.addWisdom(200);
+                    break;
+                }
+                case 'P':
+                    cout<<"You have stumbled upon a advising tile"<<endl;
+                    cout<<"Your Stamina, Strength, and Wisdom Points increase by 300"<<endl;
+                    p2.addStamina(300);
+                    p2.addStrength(300);
+                    p2.addWisdom(300);
+                    if(p2.getAdvisor() == 0){
+                        cout<<"It looks like you do not have a advisor"<<endl;
+                        cout<<"Please select a advisor from the list or enter 0 if you dont want a advisor"<<endl;
+                        cout<<"-------------------------"<<endl;
+                        displayAdvisors();
+                        cout<<"-------------------------"<<endl;
+                        int aChoice;
+                        cin>>aChoice;
+                        while(aChoice < 0 || aChoice > 5){
+                            cout<<"Invalid Choice please enter a valid number"<<endl;
+                            cin>>aChoice;
+                        }
+                        p2.setAdvisor(aChoice);
+                    } else {
+                        cout<<"It looks like you already have a advisor"<<endl;
+                        cout<<"Would you like a new advisor? y or n"<<endl;
+                        char yornChoice;
+                        cin>>yornChoice;
+                        while(yornChoice != 'y' || yornChoice != 'n'){
+                            cout<<"Invalid choice please type y or n"<<endl;
+                            cin>>yornChoice;
+                        }
+                        if(yornChoice == 'y'){
+                            cout<<"Please select a new advisor"<<endl;
+                            cout<<"-------------------------"<<endl;
+                            displayAdvisors();
+                            cout<<"-------------------------"<<endl;
+                            int aChoice;
+                            cin>>aChoice;
+                            while(aChoice < 0 || aChoice > 5){
+                                cout<<"Invalid Choice please enter a valid number"<<endl;
+                                cin>>aChoice;
+                            }
+                            p2.setAdvisor(aChoice);
+                        } else {
+                            cout<<"Ok no worries continue on"<<endl;
+                        }
+                    }
+                    break;
+                case 'R':{             
+                    //change player pos in player class -10
+                    //update board
+                    //loss stats
+                    cout<<": Uh-oh, you’ve stumbled into the Graveyard!"<<endl;
+                    board.movePlayer(1,-10);
+                    p2.addPlayerMoves(-10);
+                    p2.addStamina(-100);
+                    p2.addStrength(-100);
+                    p2.addWisdom(-100);
+                    break;
+                }
+                case 'N':{
+                    cout<<"The Hyenas are on the prowl! They push you back and decrease your stamina points!"<<endl;
+                    //this just adds a delay to make it more dramic
+                    //500 milliseconds for every move back
+                    const int spinDuration = move * 500;
+                    chrono::steady_clock::time_point startTime = chrono::steady_clock::now();
+                    while (chrono::duration_cast<chrono::milliseconds>(chrono::steady_clock::now() - startTime).count() < spinDuration) {
+                        for(int i = 0; i < move; ++i){
+                            board.movePlayer(1, -1);
+                            this_thread::sleep_for(chrono::milliseconds(500));
+                        }
+                    }                    
+                    //this line below also works but not as cool
+                    //board.movePlayer(0, move * -1);
+                    p2.addPlayerMoves(move * -1);
+                    p2.addStamina(-300);
+                    cout<<"Unlucky!!"<<endl;
+                    break;
+                }
+                case 'U':{
+                    cout<<"You have stumbled upon a challenge tile. Answer the riddle and you will gain wisdom"<<endl;
+                    string riddle = ranRiddle();
+                    string arr[2];
+                    split(riddle, '|', arr, 2);
+                    cout<<arr[0]<<endl;
+                    string answer;
+                    cin>>answer;
+                    if(answer == arr[1]){
+                        cout<<"Correct! You have gained wisdom"<<endl;
+                        p2.addWisdom(500);
+                    } else{
+                        cout<<"You did not guess correctly"<<endl;
+                    }
+                    break;
+                }
+                case 'O':
+                    //end game
+                    cout<<"You reached the last tile!!!"<<endl;
+                    break;
+                default:
+                    cout<<"This should never ever run"<<endl;
+            }
         }
         board.displayBoard();
     }
