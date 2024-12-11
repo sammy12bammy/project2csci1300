@@ -352,6 +352,10 @@ void Board::displayBoard()
         }
     }
 }
+//overload for moving player
+void Board::movePlayer(int player_index, int amount){
+    _player_position[player_index] += amount;
+}
 
 bool Board::movePlayer(int player_index)
 {
