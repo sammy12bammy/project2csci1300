@@ -88,27 +88,24 @@ int mainMenu(Player player, Board board){
         cout<<"Enter choice: "<<endl;
         cin>>choice;
     }
-    switch(choice){
+    while(choice >= 1 && choice <= 4){
         int userInput;
-        case 1:
+        if(choice == 1){
             cout<<"Pride points: "<<player.getPridePoints()<<endl;
             cout<<"Your spot in the leaderpoint"<<endl;
-            break;
             cout<<"Would you like to send a message to your opponent? Press 1 for yes or 2 for no"<<endl;
+            cin>>userInput;
             if(userInput == 1){
                 string message;
                 cin >> message;
                 cout<<"Message from player:"<<player.getName()<<message<<endl;
             }
-
-        case 2:
+        } else if (choice == 2){
             cout<<player.getName()<<" name: "<<player.getName()<<endl;
             cout<<player.getName()<<" age: "<<player.getAge()<<endl;
-            break;
-        case 3:
+        } else if(choice == 3){
             board.displayBoard();
-            break;
-        case 4:
+        } else if(choice == 4){
             if(player.getAdvisor() == 0){
                 cout<<"You do not currently have an advisor"<<endl;
             }else if(player.getAdvisor() == 1){
@@ -136,15 +133,13 @@ int mainMenu(Player player, Board board){
                 player.setAdvisor(userInput);
 
             }
-
-            break;
-        case 5:
-            int num = spinner();
-            cout<<"You moved up "<<num<<" spots"<<endl;
-            return num;
-            break;
+        }
+        cout<<"Enter another choice, or press 5 to move up"<<endl;
+        cin>>choice;
     }
-    return 0;
+    int num = spinner();
+    cout<<"You moved up "<<num<<" spots"<<endl;
+    return num;
 }
 //makes changes to player if they choose cubTraining
 //prompts user to choice adivor
@@ -257,15 +252,15 @@ int main(){
     string header;
     getline(inFile, header);
 
-    int userInput;
+    int userInput1;
     cout<<"Welcome Player 1, please select your character"<<endl;
     displayCharacters();
     cout << "Enter the line number (1-5): ";
-    cin >> userInput;
-    while(userInput < 1 || userInput > 5){
+    cin >> userInput1;
+    while(userInput1 < 1 || userInput1 > 5){
         cout<<"Invalid Input"<<endl;
         cout<<"Please select character for player 2"<<endl;
-        cin>>userInput;
+        cin>>userInput1;
     }
 
     string line;
@@ -274,7 +269,7 @@ int main(){
 
     while(getline(inFile, line)) {
         currentLine++;
-        if (currentLine == userInput) {
+        if (currentLine == userInput1) {
             stringstream ss(line);
             string value;
 
@@ -292,10 +287,11 @@ int main(){
     p1.setAge(stoi(stats[1]));
     
     //player 2 character choice
+    int userInput;
     cout<<"Welcome player 2, please select your character"<<endl;
     displayCharacters();
     cin>>userInput;
-    while(userInput < 1 || userInput > 5){
+    while((userInput < 1 || userInput > 5) || userInput == userInput1){
         cout<<"Invalid Input"<<endl;
         cout<<"Please select character for player 2"<<endl;
         cin>>userInput;
