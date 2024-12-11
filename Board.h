@@ -27,6 +27,7 @@ class Board  {
         void initializeBoard(char p1, char p2);
         void displayBoard();
         bool movePlayer(int player_index);
+        void movePlayer(int, int);
         int getPlayerPosition(int player_index) const;
 };
 
