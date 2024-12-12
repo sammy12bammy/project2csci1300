@@ -117,27 +117,23 @@ int mainMenu(Player player, Board board){
         cout<<"Enter choice: "<<endl;
         cin>>choice;
     }
-    switch(choice){
+    while(choice != 5){
         int userInput;
-        case 1:
+        if(choice == 1){
             cout<<"Pride points: "<<player.getPridePoints()<<endl;
             cout<<"Your spot in the leaderpoint"<<endl;
-            break;
             cout<<"Would you like to send a message to your opponent? Press 1 for yes or 2 for no"<<endl;
             if(userInput == 1){
                 string message;
                 cin >> message;
                 cout<<"Message from player:"<<player.getName()<<message<<endl;
             }
-
-        case 2:
+        } else if (choice == 2){
             cout<<player.getName()<<" name: "<<player.getName()<<endl;
             cout<<player.getName()<<" age: "<<player.getAge()<<endl;
-            break;
-        case 3:
+        } else if(choice == 3){
             board.displayBoard();
-            break;
-        case 4:
+        } else if(choice == 4){
             if(player.getAdvisor() == 0){
                 cout<<"You do not currently have an advisor"<<endl;
             }else if(player.getAdvisor() == 1){
@@ -156,24 +152,24 @@ int mainMenu(Player player, Board board){
 
             if(userInput == 2){
                 cout<<"Please select an advisor"<<endl;
-
                 cout<<"Enter a number 1-5"<<endl;
                 displayAdvisors();
-
                 cin >> userInput;
-
                 player.setAdvisor(userInput);
-
             }
-
-            break;
-        case 5:
-            int num = spinner();
-            cout<<"You moved up "<<num<<" spots"<<endl;
-            return num;
-            break;
+        }
+        cout<<"Enter another choice"<<endl;
+        displayMenu();
+        cin>>choice;
+        while(choice < 1 || choice > 5){
+            cout<<"Invalid Choice"<<endl;
+            cout<<"Enter choice: "<<endl;
+            cin>>choice;
+        }
     }
-    return 0;
+    int num = spinner();
+    cout<<"You moved up "<<num<<" spots"<<endl;
+    return num;
 }
 //makes changes to player if they choose cubTraining
 //prompts user to choice adivor
@@ -305,6 +301,8 @@ int split(string input, char delimiter, string arr[], int arrSize) {
 }
 
 int main(){
+    //seed ran time
+    srand(time(0));
     //check if txt file opened properlly
     fstream inFile("character.txt");
     if (!inFile) {
@@ -456,7 +454,7 @@ int main(){
             //change this make it is move to however much they spun
             board.movePlayer(0, move);
             //check if player 1 is done
-            if(p1.getPlayerPos() + move > 52){
+            if(p1.getPlayerPos() + move >= 52){
                 p1Done = true;
                 continue;
             }
@@ -562,10 +560,11 @@ int main(){
                         cout<<"Would you like a new advisor? y or n"<<endl;
                         char yornChoice;
                         cin>>yornChoice;
-                        while(yornChoice != 'y' || yornChoice != 'n'){
-                            cout<<"Invalid choice please type y or n"<<endl;
-                            cin>>yornChoice;
+                        while (yornChoice != 'y' && yornChoice != 'n') {
+                            cout << "Invalid choice please type y or n" << endl;
+                            cin >> yornChoice;
                         }
+
                         if(yornChoice == 'y'){
                             cout<<"Please select a new advisor"<<endl;
                             cout<<"-------------------------"<<endl;
@@ -599,14 +598,10 @@ int main(){
                     cout<<"The Hyenas are on the prowl! They push you back and decrease your stamina points!"<<endl;
                     //this just adds a delay to make it more dramic
                     //500 milliseconds for every move back
-                    const int spinDuration = move * 500;
-                    chrono::steady_clock::time_point startTime = chrono::steady_clock::now();
-                    while (chrono::duration_cast<chrono::milliseconds>(chrono::steady_clock::now() - startTime).count() < spinDuration) {
-                        for(int i = 0; i < move; ++i){
-                            board.movePlayer(0, -1);
-                            this_thread::sleep_for(chrono::milliseconds(500));
-                        }
-                    }                    
+                    for (int i = 0; i < move; ++i) {
+                        board.movePlayer(0, -1);
+                        this_thread::sleep_for(chrono::milliseconds(500));
+                    }        
                     //this line below also works but not as cool
                     //board.movePlayer(0, move * -1);
                     p1.addPlayerMoves(move * -1);
@@ -637,7 +632,7 @@ int main(){
                 default:
                     cout<<"This should never ever run"<<endl;
             }
-        } else if(!p1Going && !p2Done){
+        } else {
             //flips characters   
             p1Going = !p1Going;
             //let user know who is goig
@@ -648,7 +643,7 @@ int main(){
             //change this make it is move to however much they spun
             board.movePlayer(1, move);
 
-            if(p2.getPlayerPos() + move > 52){
+            if(p2.getPlayerPos() + move >= 52){
                 p2Done = true;
                 continue;
             }
