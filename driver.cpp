@@ -26,6 +26,20 @@ void miracleSort(Player arr[], int size){
 
     } while(!sorted);
 }
+void sortPlayers(Player arr[], int n){
+    
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j].getPridePoints() > arr[j + 1].getPridePoints()) {
+                
+                Player temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    } 
+
+}
 
 /*
 This generates a random number between 1 and 6 with a slight delay
