@@ -12,6 +12,21 @@
 
 using namespace std;
 
+//sorting algorithems
+//better pray for a miracle
+void miracleSort(Player arr[], int size){
+    bool sorted = false;
+    do{
+        sorted = true;
+        for(int i = 1; i < size; i++){
+            if(arr[i].getPridePoints() < arr[i -1].getPridePoints()){
+                sorted = false;
+            }
+        }
+
+    } while(!sorted);
+}
+
 /*
 This generates a random number between 1 and 6 with a slight delay
 */
@@ -88,24 +103,27 @@ int mainMenu(Player player, Board board){
         cout<<"Enter choice: "<<endl;
         cin>>choice;
     }
-    while(choice >= 1 && choice <= 4){
+    switch(choice){
         int userInput;
-        if(choice == 1){
+        case 1:
             cout<<"Pride points: "<<player.getPridePoints()<<endl;
             cout<<"Your spot in the leaderpoint"<<endl;
+            break;
             cout<<"Would you like to send a message to your opponent? Press 1 for yes or 2 for no"<<endl;
-            cin>>userInput;
             if(userInput == 1){
                 string message;
                 cin >> message;
                 cout<<"Message from player:"<<player.getName()<<message<<endl;
             }
-        } else if (choice == 2){
+
+        case 2:
             cout<<player.getName()<<" name: "<<player.getName()<<endl;
             cout<<player.getName()<<" age: "<<player.getAge()<<endl;
-        } else if(choice == 3){
+            break;
+        case 3:
             board.displayBoard();
-        } else if(choice == 4){
+            break;
+        case 4:
             if(player.getAdvisor() == 0){
                 cout<<"You do not currently have an advisor"<<endl;
             }else if(player.getAdvisor() == 1){
@@ -133,13 +151,15 @@ int mainMenu(Player player, Board board){
                 player.setAdvisor(userInput);
 
             }
-        }
-        cout<<"Enter another choice, or press 5 to move up"<<endl;
-        cin>>choice;
+
+            break;
+        case 5:
+            int num = spinner();
+            cout<<"You moved up "<<num<<" spots"<<endl;
+            return num;
+            break;
     }
-    int num = spinner();
-    cout<<"You moved up "<<num<<" spots"<<endl;
-    return num;
+    return 0;
 }
 //makes changes to player if they choose cubTraining
 //prompts user to choice adivor
@@ -167,8 +187,38 @@ void prideLand(Player p){
 }
 
 //for when the game if finished, array sort here
-void displayEndGame(){
+void displayEndGame(Player p1, Player p2, Board board){
+    cout<<"Both players have reached the end of the game!"<<endl;
+    int p1St = (p1.getStamina() % 100) * 1000;
+    int p1Str = (p1.getStrength() % 100) * 1000;
+    int p1W = (p1.getWisdom() % 100) * 1000;
+    p1.addPridePoints(p1St + p1Str + p1W);
 
+    int p2St = (p2.getStamina() % 100) * 1000;
+    int p2Str = (p2.getStrength() % 100) * 1000;
+    int p2W = (p2.getWisdom() % 100) * 1000;
+    p1.addPridePoints(p2St + p2Str + p2W);
+
+    const int arrSize = 2;
+    Player arr[arrSize];
+
+    //sorting algrithem here
+    char c;
+    cout<<"Would you like to use bubble sort or miracle sort to sort the leaderboard? Press B for bubble or M for miracle"<<endl;
+    cin>>c;
+    while(c != 'B' || c != 'M'){
+        cout<<"Invalid choice. Enter Again"<<endl;
+        cin>>c;
+    }
+    if(c == 'B'){
+        //bubble sort
+    } else if(c == 'M'){
+        miracleSort(arr, arrSize);
+    }
+    ofstream file_out;
+    file_out.open("results.txt");
+    file_out<<"The winner is "<<arr[1].getName()<<" who had "<<arr[1].getPridePoints()<<endl;
+    file_out<<"Second place is "<<arr[1].getName()<<" who had "<<arr[1].getPridePoints()<<endl;
 }
 
 //returns a random string of riddle with the answer
@@ -252,15 +302,15 @@ int main(){
     string header;
     getline(inFile, header);
 
-    int userInput1;
+    int userInput;
     cout<<"Welcome Player 1, please select your character"<<endl;
     displayCharacters();
     cout << "Enter the line number (1-5): ";
-    cin >> userInput1;
-    while(userInput1 < 1 || userInput1 > 5){
+    cin >> userInput;
+    while(userInput < 1 || userInput > 5){
         cout<<"Invalid Input"<<endl;
         cout<<"Please select character for player 2"<<endl;
-        cin>>userInput1;
+        cin>>userInput;
     }
 
     string line;
@@ -269,7 +319,7 @@ int main(){
 
     while(getline(inFile, line)) {
         currentLine++;
-        if (currentLine == userInput1) {
+        if (currentLine == userInput) {
             stringstream ss(line);
             string value;
 
@@ -287,11 +337,10 @@ int main(){
     p1.setAge(stoi(stats[1]));
     
     //player 2 character choice
-    int userInput;
     cout<<"Welcome player 2, please select your character"<<endl;
     displayCharacters();
     cin>>userInput;
-    while((userInput < 1 || userInput > 5) || userInput == userInput1){
+    while(userInput < 1 || userInput > 5){
         cout<<"Invalid Input"<<endl;
         cout<<"Please select character for player 2"<<endl;
         cin>>userInput;
@@ -370,21 +419,18 @@ int main(){
     //keeps track of whos going
     bool p1Going = true;
 
-    //check if one player is done
-
-    /*
-    The game work we just need to figure out how to impliment the spinner
-    Also we need to make sure that the second player can still continue
-    playing if the first player reached the end
-    */
+    //check if players are done
+    bool p1Done = false;
+    bool p2Done = true;
 
     while(game){
         //if both players have reached the end
-        if(board.getPlayerPosition(1) == 52 && board.getPlayerPosition(2) == 52){
+        if(board.getPlayerPosition(1) >= 52 && board.getPlayerPosition(2) >= 52){
             game = false;
-            displayEndGame();
+            displayEndGame(p1, p2, board);
+            break;
         }
-        if(p1Going){
+        if(p1Going && !p1Done){
             //flips characters   
             p1Going = !p1Going;
             //let user know who is goig
@@ -394,6 +440,11 @@ int main(){
             p1.addPlayerMoves(move);
             //change this make it is move to however much they spun
             board.movePlayer(0, move);
+            //check if player 1 is done
+            if(p1.getPlayerPos() + move > 52){
+                p1Done = true;
+                continue;
+            }
 
             //check tile
             //if tile is green - 20% of random event
@@ -571,7 +622,7 @@ int main(){
                 default:
                     cout<<"This should never ever run"<<endl;
             }
-        } else {
+        } else if(!p1Going && !p2Done){
             //flips characters   
             p1Going = !p1Going;
             //let user know who is goig
@@ -581,6 +632,11 @@ int main(){
             p2.addPlayerMoves(move);
             //change this make it is move to however much they spun
             board.movePlayer(1, move);
+
+            if(p2.getPlayerPos() + move > 52){
+                p2Done = true;
+                continue;
+            }
 
             char curTile = board.getTileColor(1, p2.getPlayerPos());
             switch(curTile){
@@ -675,7 +731,7 @@ int main(){
                         cout<<"Would you like a new advisor? y or n"<<endl;
                         char yornChoice;
                         cin>>yornChoice;
-                        while(yornChoice != 'y' || yornChoice != 'n'){
+                        while(yornChoice != 'y' && yornChoice != 'n'){
                             cout<<"Invalid choice please type y or n"<<endl;
                             cin>>yornChoice;
                         }
