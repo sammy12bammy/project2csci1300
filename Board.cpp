@@ -1,3 +1,5 @@
+//sam and sutchin
+
 #include "Board.h"
 using namespace std;
 #include<iostream>
