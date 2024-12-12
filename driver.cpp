@@ -1,3 +1,5 @@
+//sam and sutchin
+
 #include<iostream>
 #include "Player.h"
 #include "Board.h"
@@ -587,8 +589,12 @@ int main(){
                     //update board
                     //loss stats
                     cout<<": Uh-oh, you’ve stumbled into the Graveyard!"<<endl;
-                    board.movePlayer(0,-10);
-                    p1.addPlayerMoves(-10);
+                    if(p1.getPlayerPos()<10){
+                        p1.setPlayerMoves(0);
+                    }else{
+                        board.movePlayer(0,-10);
+                        p1.addPlayerMoves(-10);
+                    }
                     p1.addStamina(-100);
                     p1.addStrength(-100);
                     p1.addWisdom(-100);
@@ -598,10 +604,14 @@ int main(){
                     cout<<"The Hyenas are on the prowl! They push you back and decrease your stamina points!"<<endl;
                     //this just adds a delay to make it more dramic
                     //500 milliseconds for every move back
+                    cout << "\033[2J\033[H"<<endl;
+                    board.displayBoard();
                     for (int i = 0; i < move; ++i) {
-                        board.movePlayer(0, -1);
+                        board.movePlayer(1, -1);
                         this_thread::sleep_for(chrono::milliseconds(500));
-                    }        
+                        cout << "\033[2J\033[H"<<endl;
+                        board.displayBoard();
+                    }      
                     //this line below also works but not as cool
                     //board.movePlayer(0, move * -1);
                     p1.addPlayerMoves(move * -1);
@@ -778,14 +788,16 @@ int main(){
                     cout<<"The Hyenas are on the prowl! They push you back and decrease your stamina points!"<<endl;
                     //this just adds a delay to make it more dramic
                     //500 milliseconds for every move back
-                    const int spinDuration = move * 500;
-                    chrono::steady_clock::time_point startTime = chrono::steady_clock::now();
-                    while (chrono::duration_cast<chrono::milliseconds>(chrono::steady_clock::now() - startTime).count() < spinDuration) {
-                        for(int i = 0; i < move; ++i){
-                            board.movePlayer(1, -1);
-                            this_thread::sleep_for(chrono::milliseconds(500));
-                        }
-                    }                    
+                    //clear the terminal
+                    cout << "\033[2J\033[H"<<endl;
+                    board.displayBoard();
+                    for (int i = 0; i < move; ++i) {
+                        board.movePlayer(1, -1);
+                        this_thread::sleep_for(chrono::milliseconds(500));
+                        cout << "\033[2J\033[H"<<endl;
+                        board.displayBoard();
+                    }
+                    
                     //this line below also works but not as cool
                     //board.movePlayer(0, move * -1);
                     p2.addPlayerMoves(move * -1);
