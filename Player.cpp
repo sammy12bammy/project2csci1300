@@ -1,3 +1,5 @@
+//sam and sutchin
+
 #include<iostream>
 #include <unistd.h>
 #include "Player.h"
@@ -108,6 +110,9 @@ void Player::setAge(int a){
     if(a >= 1 && a <= 20){
         _age = a;
     }
+}
+void Player::setPlayerMoves(int p){
+    _playerPos = p;
 }
 
 void Player::addStrength(int s){
