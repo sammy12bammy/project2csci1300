@@ -4,6 +4,8 @@ using namespace std;
 #ifndef PLAYER_H
 #define PLAYER_H
 
+//sam and sutchin
+
 class Player{
     private:
         string _name;
@@ -28,7 +30,9 @@ class Player{
         int getAdvisor();
         //player pos
         int getPlayerPos();
+        void setPlayerPos(int);
         void addPlayerMoves(int);
+        void setPlayerMoves(int);
         void setAdvisor(int);
         //adder methods
         void addStrength(int);
