@@ -226,6 +226,7 @@ void displayEndGame(Player p1, Player p2, Board board){
     }
     if(c == 'B'){
         //bubble sort
+        sortPlayers(arr, arrSize);
     } else if(c == 'M'){
         miracleSort(arr, arrSize);
     }
